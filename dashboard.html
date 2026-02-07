@@ -15,25 +15,27 @@
     <div id="status">Checking status...</div>
 
     <script>
-        const API_UPDATE = "https://roblox-control-api-iqgg.vercel.app/api/update";
-        const API_STATUS = "https://roblox-control-api-iqgg.vercel.app/api/status";
+        const API_URL = "https://roblox-control-api-iqgg.vercel.app/api/status"; // your API
 
+        // Read current status from API
         async function updateStatus() {
-            const res = await fetch(API_STATUS);
+            const res = await fetch(API_URL);  // GET request
             const data = await res.json();
-            document.getElementById("status").innerText = "Current status: " + (data.enabled ? "Enabled ✅" : "Disabled ❌");
+            document.getElementById("status").innerText =
+                "Current status: " + (data.enabled ? "Enabled ✅" : "Disabled ❌");
         }
 
+        // Toggle the map state
         async function toggle(value) {
-            await fetch(API_UPDATE, {
-                method: "POST",
+            await fetch(API_URL, {
+                method: "POST",  // POST = update
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ enabled: value })
+                body: JSON.stringify({ enabled: value }) // send true/false
             });
-            updateStatus();
+            updateStatus();  // refresh status text
         }
 
-        // Check status every 5 seconds
+        // Update status every 5 seconds automatically
         updateStatus();
         setInterval(updateStatus, 5000);
     </script>
