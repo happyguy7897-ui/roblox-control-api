@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roblox Map Control</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        button { padding: 15px 30px; font-size: 18px; margin: 10px; cursor: pointer; }
+        #status { font-size: 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Roblox Map Control</h1>
+    <button onclick="toggle(true)">Enable Map</button>
+    <button onclick="toggle(false)">Disable Map</button>
+    <div id="status">Checking status...</div>
+
+    <script>
+        const API_UPDATE = "https://roblox-control-api-iqgg.vercel.app/api/update";
+        const API_STATUS = "https://roblox-control-api-iqgg.vercel.app/api/status";
+
+        async function updateStatus() {
+            const res = await fetch(API_STATUS);
+            const data = await res.json();
+            document.getElementById("status").innerText = "Current status: " + (data.enabled ? "Enabled ✅" : "Disabled ❌");
+        }
+
+        async function toggle(value) {
+            await fetch(API_UPDATE, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ enabled: value })
+            });
+            updateStatus();
+        }
+
+        // Check status every 5 seconds
+        updateStatus();
+        setInterval(updateStatus, 5000);
+    </script>
+</body>
+</html>
